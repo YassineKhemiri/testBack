@@ -41,7 +41,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 				Long userId = tokenProvider.getUserIdFromToken(jwt);
-
 				UserDetails userDetails = customUserDetailsService.loadUserById(userId);
 				Collection<? extends GrantedAuthority> authorities = tokenProvider.isAuthenticated(jwt)
 						? userDetails.getAuthorities()
