@@ -56,6 +56,14 @@ public class MailServiceImpl implements MailService {
 		sendHtmlEmail("Registration Confirmation",  LINE_BREAK + confirmationUrl, user);
 	}
 
+	@Async
+	@Override
+	public void sendVerificationToken2(String token, User user) {
+		final String confirmationUrl = appProperties.getClient().getBaseUrl() + "verify2?token=" + token;
+		//final String message = messageService.getMessage("message.mail.verification");
+		sendHtmlEmail("Registration Confirmation",  LINE_BREAK + confirmationUrl, user);
+	}
+
 	private String geFreeMarkerTemplateContent(Map<String, Object> model, String templateName) {
 		StringBuffer content = new StringBuffer();
 		try {

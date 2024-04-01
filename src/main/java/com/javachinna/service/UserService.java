@@ -3,6 +3,7 @@ package com.javachinna.service;
 import java.util.Map;
 import java.util.Optional;
 
+import com.javachinna.dto.NewPasswordRequest;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
@@ -20,6 +21,10 @@ public interface UserService {
 	public User registerNewUser(SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException;
 
 	User findUserByEmail(String email);
+
+	User ChangePassword (NewPasswordRequest newPasswordRequest);
+
+	User findByEmailAndCin(String email,Long cin);
 
 	User findUserByNum(String num);
 

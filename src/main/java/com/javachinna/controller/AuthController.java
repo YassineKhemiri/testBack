@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
+import com.javachinna.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.javachinna.config.AppConstants;
 import com.javachinna.config.CurrentUser;
-import com.javachinna.dto.ApiResponse;
-import com.javachinna.dto.JwtAuthenticationResponse;
-import com.javachinna.dto.LocalUser;
-import com.javachinna.dto.LoginRequest;
-import com.javachinna.dto.SignUpRequest;
-import com.javachinna.dto.SignUpResponse;
 import com.javachinna.exception.UserAlreadyExistAuthenticationException;
 import com.javachinna.model.User;
 import com.javachinna.security.jwt.TokenProvider;
@@ -79,6 +74,24 @@ public class AuthController {
 		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, authenticated, authenticated ? GeneralUtils.buildUserInfo(localUser) : null));
 	}
 
+	@PostMapping("/forgetPassword")
+	public ResponseEntity<?> forgetPassword(@Valid @RequestBody ForgetPasswordRequest forgetPasswordRequest) {
+		try {
+			User user = userService.findByEmailAndCin(forgetPasswordRequest.getEmail(),forgetPasswordRequest.getCin());
+			final String token = UUID.randomUUID().toString();
+			userService.createVerificationTokenForUser(user, token);
+			mailService.sendVerificationToken2(token, user);
+
+		} catch (UserAlreadyExistAuthenticationException e) {
+			log.error("Exception Ocurred", e);
+			return new ResponseEntity<>(new ApiResponse(false, "User Not found "), HttpStatus.BAD_REQUEST);
+		}
+
+		return ResponseEntity.ok().body(new ApiResponse(true, "User found successfully"));
+	}
+
+
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 		try {
@@ -104,9 +117,26 @@ public class AuthController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
 	}
 
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> ChangePassword(@Valid @RequestBody NewPasswordRequest newPasswordRequest) {
+
+        User user = userService.ChangePassword(newPasswordRequest);
+        return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
+    }
+
 	@PostMapping("/verify")
 	@PreAuthorize("hasRole('PRE_VERIFICATION_USER')")
 	public ResponseEntity<?> verifyCode(@NotEmpty @RequestBody String code, @CurrentUser LocalUser user) {
+		if (!verifier.isValidCode(user.getUser().getSecret(), code)) {
+			return new ResponseEntity<>(new ApiResponse(false, "Invalid Code there is an error !"), HttpStatus.BAD_REQUEST);
+		}
+		String jwt = tokenProvider.createToken(user, true);
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, true, GeneralUtils.buildUserInfo(user)));
+	}
+
+	@PostMapping("/verify2")
+	@PreAuthorize("hasRole('PRE_VERIFICATION_USER')")
+	public ResponseEntity<?> verifyCode2(@NotEmpty @RequestBody String code, @CurrentUser LocalUser user) {
 		if (!verifier.isValidCode(user.getUser().getSecret(), code)) {
 			return new ResponseEntity<>(new ApiResponse(false, "Invalid Code there is an error !"), HttpStatus.BAD_REQUEST);
 		}
