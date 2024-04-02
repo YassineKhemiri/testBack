@@ -1,7 +1,6 @@
 package com.javachinna.dto;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.javachinna.validator.PasswordMatches;
@@ -46,13 +45,7 @@ public class SignUpRequest {
 		this.matchingPassword = matchingPassword;
 	}
 
-	/*public SignUpRequest(String providerUserId,String displayName, String email, String password, String matchingPassword) {
-		this.providerUserId = providerUserId;
-		this.displayName=displayName;
-		this.email = email;
-		this.password = password;
-		this.matchingPassword = matchingPassword;
-	}*/
+
 
 	public static Builder getBuilder() {
 		return new Builder();
@@ -63,15 +56,17 @@ public class SignUpRequest {
 
 		private String displayName;
 
-		private String num ;
+
 
 		private Long cin ;
 		private String email;
+
+		private String num ;
 		private String password;
 
-		private SocialProvider socialProvider;
-
 		private String matchingPassword;
+
+		private SocialProvider socialProvider;
 
 		public Builder addProviderUserID(final String userID) {
 			this.providerUserID = userID;
@@ -80,6 +75,11 @@ public class SignUpRequest {
 
 		public Builder addEmail(final String email) {
 			this.email = email;
+			return this;
+		}
+
+		public Builder addNum(final String num) {
+			this.num= num;
 			return this;
 		}
 
@@ -93,10 +93,7 @@ public class SignUpRequest {
 			return this;
 		}
 
-        public Builder addNum(final String num) {
-            this.num= num;
-            return this;
-        }
+
 
 		public Builder addDisplayName(String name) {
 			this.displayName=name;

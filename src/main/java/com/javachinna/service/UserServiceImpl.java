@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.javachinna.dto.NewPasswordRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -96,8 +97,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(value = "transactionManager")
+	public User ChangePassword (final NewPasswordRequest newPasswordRequest){
+		User user = findUserByNum(newPasswordRequest.getNum());
+		user.setPassword(passwordEncoder.encode(newPasswordRequest.getPassword()));
+		Date now = Calendar.getInstance().getTime();
+		user.setModifiedDate(now);
+		user = userRepository.save(user);
+		userRepository.flush();
+		return user;
+
+	}
+
+	@Override
 	public User findUserByEmail(final String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public User findByEmailAndCin(String email, Long cin) {
+		return userRepository.findByEmailAndCin(email,cin);
 	}
 
 	@Override
