@@ -33,10 +33,7 @@ import com.javachinna.util.GeneralUtils;
 
 import dev.samstevens.totp.secret.SecretGenerator;
 
-/**
- * @author Chinna
- * @since 26/3/18
- */
+
 @Service
 public class UserServiceImpl implements UserService {
 

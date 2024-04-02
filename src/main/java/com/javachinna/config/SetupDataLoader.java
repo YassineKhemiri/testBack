@@ -46,7 +46,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	}
 
 	@Transactional
-	private final User createUserIfNotFound(final String email, Set<Role> roles) {
+	public User createUserIfNotFound(final String email, Set<Role> roles) {
 		User user = userRepository.findByEmail(email);
 		if (user == null) {
 			user = new User();

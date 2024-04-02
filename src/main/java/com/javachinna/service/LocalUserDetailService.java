@@ -24,10 +24,10 @@ public class LocalUserDetailService implements UserDetailsService {
 
 	@Override
 	@Transactional
-	public LocalUser loadUserByUsername(final String email) throws UsernameNotFoundException {
-		User user = userService.findUserByEmail(email);
+	public LocalUser loadUserByUsername(final String num) throws UsernameNotFoundException {
+		User user = userService.findUserByNum(num);
 		if (user == null) {
-			throw new UsernameNotFoundException("User " + email + " was not found in the database");
+			throw new UsernameNotFoundException("User " + num + " was not found in the database");
 		}
 		return createLocalUser(user);
 	}
@@ -38,10 +38,7 @@ public class LocalUserDetailService implements UserDetailsService {
 		return createLocalUser(user);
 	}
 
-	/**
-	 * @param user
-	 * @return
-	 */
+
 	private LocalUser createLocalUser(User user) {
 		return new LocalUser(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, GeneralUtils.buildSimpleGrantedAuthorities(user.getRoles()), user);
 	}
