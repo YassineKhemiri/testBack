@@ -42,7 +42,7 @@ public class GeneralUtils {
 	public static UserInfo buildUserInfo(LocalUser localUser) {
 		List<String> roles = localUser.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 		User user = localUser.getUser();
-		return new UserInfo(user.getId().toString(),user.getAddress(),user.getSex(), user.getDisplayName(), user.getEmail(),user.getNum(),user.getCin(),user.getImage(),user.getBirth_date(), roles);
+		return new UserInfo(user.getId().toString(),user.getNum(),user.getAddress(),user.getSex(), user.getDisplayName(), user.getEmail(),user.getCin(),user.getImage(),user.getBirth_date(), roles);
 	}
 	
 	public static Date calculateExpiryDate(final int expiryTimeInMinutes) {
