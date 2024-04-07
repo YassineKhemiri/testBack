@@ -1,11 +1,6 @@
 package com.javachinna.service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import com.javachinna.dto.NewPasswordRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +50,11 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	MailService mailService;
+
+	@Override
+	public List<User> findAllUsers() {
+		return userRepository.findAll();
+	}
 
 	@Override
 	@Transactional(value = "transactionManager")

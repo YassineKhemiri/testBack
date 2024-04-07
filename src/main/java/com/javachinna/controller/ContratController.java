@@ -20,9 +20,10 @@ public class ContratController {
     @Autowired
     private ContratService contratService;
 
-    @GetMapping
-    public List<Contrat> getAllContrats(){
-        return contratService.getAllContarts();
+    @GetMapping("listeContrats")
+    public ResponseEntity<?> getAllContrats()
+    {
+        return  ResponseEntity.ok(contratService.getAllContarts());
     }
 
     @GetMapping("/{id}")

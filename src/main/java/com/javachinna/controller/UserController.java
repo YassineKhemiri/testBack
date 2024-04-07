@@ -1,5 +1,8 @@
 package com.javachinna.controller;
 
+
+import com.javachinna.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +17,19 @@ import com.javachinna.util.GeneralUtils;
 @RequestMapping("/api")
 public class UserController {
 
+	@Autowired
+	private UserService userService;
+
 	@GetMapping("/user/me")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> getCurrentUser(@CurrentUser LocalUser user) {
 		return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
+	}
+
+	@GetMapping("listeUsers")
+	public ResponseEntity<?> getAllUserss()
+	{
+		return  ResponseEntity.ok(userService.findAllUsers());
 	}
 
 	@GetMapping("/all")

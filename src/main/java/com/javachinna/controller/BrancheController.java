@@ -3,29 +3,32 @@ package com.javachinna.controller;
 import com.javachinna.model.Branche;
 import com.javachinna.service.BrancheService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/branches")
+@RequestMapping("/api")
 public class BrancheController {
 
     @Autowired
     private BrancheService brancheService;
 
 
-    @GetMapping
-    public List<Branche> getAllBranches(){
-        return brancheService.getAllBranches();
+    @GetMapping("branches")
+    public ResponseEntity<?> getAllBranches()
+    {
+        return  ResponseEntity.ok(brancheService.getAllBranches());
     }
 
-    @GetMapping("/{id}")
-    public Branche getBranche(@PathVariable (name = "id") Long id) {
-        return brancheService.getBrancheById(id);
+    @GetMapping("/branche/{id}")
+    public ResponseEntity<?> getBrancheById(@PathVariable(name = "id") Long id)
+    {
+        return  ResponseEntity.ok(brancheService.getBrancheById(id));
     }
 
-    @GetMapping("/branche/{libelle}")
+    @GetMapping("/branches/{libelle}")
     public List<Branche> getBrancheByLibelle(@PathVariable (name = "libelle") String libelle) {
         return brancheService.findBrancheByLibelleBranche(libelle);
     }
@@ -36,21 +39,22 @@ public class BrancheController {
     }
 
 
-    @DeleteMapping("/{x}")
+    @DeleteMapping("/deleteBranche/{x}")
     public void deleteBrancheById(@PathVariable (name = "x") Long x) {
         brancheService.deleteBranche(x);
     }
 
 
 
-    @PutMapping
-    public Branche EditBranche(@RequestBody Branche b) {
-        return brancheService.updateBranche(b);
+    @PutMapping("editbranche")
+    public ResponseEntity<?> EditBranche(@RequestBody Branche b)
+    {
+        return  ResponseEntity.ok(brancheService.updateBranche(b));
     }
 
-    @PostMapping
-    public Branche addBranche(@RequestBody Branche b) {
-        return brancheService.addBranche(b);
+    @PostMapping("addbranche")
+    public ResponseEntity<?> addBranche(@RequestBody Branche b)
+    {
+        return  ResponseEntity.ok(brancheService.addBranche(b));
     }
-
 }
