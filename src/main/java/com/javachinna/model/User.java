@@ -80,4 +80,8 @@ public class User implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "USER_ID")}, inverseJoinColumns = {@JoinColumn(name = "ROLE_ID")})
 	private Set<Role> roles;
+	@Column(name = "verified")
+	private Byte verified =0; // Default is 0, indicating not verified. Use other values to indicate different states.
+
+
 }

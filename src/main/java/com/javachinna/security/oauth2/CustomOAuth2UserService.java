@@ -32,7 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	@Autowired
 	private Environment env;
 
-	@Override
+	/*@Override
 	public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
 		OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
 		try {
@@ -50,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			// OAuth2AuthenticationFailureHandler
 			throw new OAuth2AuthenticationProcessingException(ex.getMessage(), ex.getCause());
 		}
-	}
+	}*/
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void populateEmailAddressFromLinkedIn(OAuth2UserRequest oAuth2UserRequest, Map<String, Object> attributes) throws OAuth2AuthenticationException {

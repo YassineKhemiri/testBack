@@ -29,6 +29,7 @@ public class LocalUserDetailService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User " + num + " was not found in the database");
 		}
+
 		return createLocalUser(user);
 	}
 
@@ -40,6 +41,6 @@ public class LocalUserDetailService implements UserDetailsService {
 
 
 	private LocalUser createLocalUser(User user) {
-		return new LocalUser(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, GeneralUtils.buildSimpleGrantedAuthorities(user.getRoles()), user);
+		return new LocalUser(user.getEmail(), user.getPassword(), user.isEnabled(), user.getVerified(), true, true, true, GeneralUtils.buildSimpleGrantedAuthorities(user.getRoles()), user);
 	}
 }

@@ -51,17 +51,17 @@ public class MailServiceImpl implements MailService {
 	@Async
 	@Override
 	public void sendVerificationToken(String token, User user) {
-		final String confirmationUrl = appProperties.getClient().getBaseUrl() + "verify?token=" + token;
-		//final String message = messageService.getMessage("message.mail.verification");
-		sendHtmlEmail("Registration Confirmation",  LINE_BREAK + confirmationUrl, user);
+		final String confirmationUrl = appProperties.getClient().getBaseUrl() + "/verify?token=" + token;
+		// Assuming "mail/verificationConfirm.ftl" is your email template for the first verification token
+		sendHtmlEmail("Registration Confirmation", LINE_BREAK + confirmationUrl, user, "mail/verification.ftl");
 	}
 
 	@Async
 	@Override
 	public void sendVerificationToken2(String token, User user) {
-		final String confirmationUrl = appProperties.getClient().getBaseUrl() + "verify2?token=" + token;
-		//final String message = messageService.getMessage("message.mail.verification");
-		sendHtmlEmail("Registration Confirmation",  LINE_BREAK + confirmationUrl, user);
+		final String confirmationUrl = appProperties.getClient().getBaseUrl() + "/verify2?token=" + token;
+		logger.info("Sending password reset email with URL: " + confirmationUrl);  // Debug log
+		sendHtmlEmail("Password Reset",  confirmationUrl, user, "mail/passwordReset.ftl");
 	}
 
 	private String geFreeMarkerTemplateContent(Map<String, Object> model, String templateName) {
@@ -75,14 +75,15 @@ public class MailServiceImpl implements MailService {
 		return "";
 	}
 
-	private void sendHtmlEmail(String subject, String msg, User user) {
-		Map<String, Object> model = new HashMap<String, Object>();
+	private void sendHtmlEmail(String subject, String msg, User user, String templateName) {
+		Map<String, Object> model = new HashMap<>();
 		model.put("name", user.getDisplayName());
 		model.put("msg", msg);
 		model.put("title", subject);
 		model.put(BASE_URL, appProperties.getClient().getBaseUrl());
 		try {
-			sendHtmlMail(env.getProperty(SUPPORT_EMAIL), user.getEmail(), subject, geFreeMarkerTemplateContent(model, "mail/verification.ftl"));
+			String emailBody = geFreeMarkerTemplateContent(model, templateName);
+			sendHtmlMail(env.getProperty(SUPPORT_EMAIL), user.getEmail(), subject, emailBody);
 		} catch (MessagingException e) {
 			logger.error("Failed to send mail", e);
 		}
@@ -102,4 +103,5 @@ public class MailServiceImpl implements MailService {
 		mailSender.send(mail);
 		logger.info("Sent mail: {0}", subject);
 	}
+
 }

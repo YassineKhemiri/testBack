@@ -17,7 +17,7 @@ public class CustomOidcUserService extends OidcUserService {
 	@Autowired
 	private UserService userService;
 
-	@Override
+	/*@Override
 	public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 		OidcUser oidcUser = super.loadUser(userRequest);
 		try {
@@ -31,5 +31,5 @@ public class CustomOidcUserService extends OidcUserService {
 			// OAuth2AuthenticationFailureHandler
 			throw new OAuth2AuthenticationProcessingException(ex.getMessage(), ex.getCause());
 		}
-	}
+	}*/
 }

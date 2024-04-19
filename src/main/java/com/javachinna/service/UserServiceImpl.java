@@ -77,6 +77,10 @@ public class UserServiceImpl implements UserService {
 		userRepository.flush();
 		return user;
 	}
+	public boolean existbynum(String num) {
+		// Assuming you have a memberRepository
+		return userRepository.existsByNum(num);
+	}
 
 	private User buildUser(final SignUpRequest formDTO) {
 		User user = findUserByNum(formDTO.getNum());
@@ -88,6 +92,7 @@ public class UserServiceImpl implements UserService {
 		roles.add(roleRepository.findByName(Role.ROLE_USER));
 		user.setRoles(roles);
 		user.setEnabled(user.isEnabled());
+		user.setVerified((byte)1);
 		user.setProviderUserId(formDTO.getProviderUserId());
 		if (formDTO.isUsing2FA()) {
 			user.setUsing2FA(true);
@@ -130,7 +135,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-	@Override
+	/*@Override
 	@Transactional
 	public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
 		OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, attributes);
@@ -152,7 +157,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return LocalUser.create(user, attributes, idToken, userInfo);
-	}
+	}*/
 
 	private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
 		existingUser.setDisplayName(oAuth2UserInfo.getName());
@@ -200,9 +205,13 @@ public class UserServiceImpl implements UserService {
 		if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
 			return AppConstants.TOKEN_EXPIRED;
 		}
+		if (user.getVerified() == 1) {
+			user.setEnabled(true);
+			user.setVerified((byte) 2);  // Email verified, update status
+
+		}
 
 
-		user.setEnabled(true);
 		tokenRepository.delete(verificationToken);
 		userRepository.save(user);
 		return AppConstants.TOKEN_VALID;

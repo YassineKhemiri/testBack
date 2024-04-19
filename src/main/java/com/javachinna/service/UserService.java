@@ -35,11 +35,13 @@ public interface UserService {
 
 	Optional<User> findUserById(Long id);
 
-	LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
+	/*LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);*/
 	
 	void createVerificationTokenForUser(User user, String token);
 
 	boolean resendVerificationToken(String token);
 
 	String validateVerificationToken(String token);
+
+	boolean existbynum(String num);
 }

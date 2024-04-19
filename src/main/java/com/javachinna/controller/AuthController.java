@@ -63,13 +63,20 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getNum(), loginRequest.getPassword()));
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getNum(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		LocalUser localUser = (LocalUser) authentication.getPrincipal();
-		boolean authenticated = localUser.getUser().isEnabled();
-		String jwt = tokenProvider.createToken(localUser, authenticated);
-		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, authenticated, authenticated ? GeneralUtils.buildUserInfo(localUser) : null));
+
+		// Ensure the user is enabled and has verified their email
+		if (!localUser.isEnabled() || localUser.getUser().getVerified() != 2) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse(false, "Account not enabled or email not verified."));
+		}
+
+		String jwt = tokenProvider.createToken(localUser, true);
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, true, GeneralUtils.buildUserInfo(localUser)));
 	}
+
 
 	@PostMapping("/forgetPassword")
 	public ResponseEntity<?> forgetPassword(@Valid @RequestBody ForgetPasswordRequest forgetPasswordRequest) {
@@ -91,6 +98,11 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+		if (!userService.existbynum(signUpRequest.getNum())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new ApiResponse(false, " num adherent non existant"));
+		}
 		try {
 			User user = userService.registerNewUser(signUpRequest);
 			final String token = UUID.randomUUID().toString();
@@ -138,6 +150,7 @@ public class AuthController {
 			return new ResponseEntity<>(new ApiResponse(false, "Invalid Code there is an error !"), HttpStatus.BAD_REQUEST);
 		}
 		String jwt = tokenProvider.createToken(user, true);
+
 		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, true, GeneralUtils.buildUserInfo(user)));
 	}
 
