@@ -1,6 +1,7 @@
 package com.javachinna.service;
 
 import com.javachinna.model.Contrat;
+import com.javachinna.model.CountType;
 import com.javachinna.model.User;
 import com.javachinna.repo.ContratRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,10 @@ public class ContratServiceImpl implements ContratService{
     @Override
     public void deleteContart(Long id) {
         contratRepo.deleteById(id);
+    }
+
+    @Override
+    public List<CountType> getPercentageGroupByBranche() {
+        return contratRepo.getPercentageGroupByBranche();
     }
 }

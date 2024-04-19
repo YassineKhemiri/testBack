@@ -106,7 +106,6 @@ public class UserServiceImpl implements UserService {
 		user = userRepository.save(user);
 		userRepository.flush();
 		return user;
-
 	}
 
 	@Override

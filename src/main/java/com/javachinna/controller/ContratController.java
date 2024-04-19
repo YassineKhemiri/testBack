@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/contrat")
 @CrossOrigin("*")
 public class ContratController {
 
@@ -26,13 +26,20 @@ public class ContratController {
         return  ResponseEntity.ok(contratService.getAllContarts());
     }
 
+    @GetMapping("PercentageByBranche")
+    public ResponseEntity<?> getPercentageByBranche()
+    {
+        return  ResponseEntity.ok(contratService.getPercentageGroupByBranche());
+    }
+
+
     @GetMapping("/{id}")
     public Contrat getContratById(@PathVariable(name = "id") Long id) {
         return contratService.getContartById(id);
     }
 
 
-    @GetMapping("/contrat/{id}")
+    @GetMapping("/Mycontrat/{id}")
     public ResponseEntity<?> getContratByUserId(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(contratService.findContratByUserId(id));
     }
