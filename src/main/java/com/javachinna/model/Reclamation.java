@@ -13,11 +13,11 @@ public class Reclamation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
-    private String contactNumber;
+    private String NomPrenom;
+    private String Telephone;
     private String email;
-    private String category;
-    private String subject;
+    private String categorie;
+    private String sujet;
     private String description;
     @Lob
     @Column(name = "file_data", columnDefinition="LONGBLOB")

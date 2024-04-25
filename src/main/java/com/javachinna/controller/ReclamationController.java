@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reclamations")
@@ -21,9 +23,13 @@ public class ReclamationController {
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, @Valid Reclamation reclamation) {
         try {
             reclamationService.saveReclamation(file, reclamation);
-            return ResponseEntity.ok("File uploaded and form data saved successfully");
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "File uploaded and form data saved successfully");
+            return ResponseEntity.ok(response);  // Send JSON response
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to upload file: " + e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Failed to upload file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // Send JSON response
         }
     }
     @GetMapping
