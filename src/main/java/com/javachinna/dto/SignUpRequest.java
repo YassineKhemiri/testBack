@@ -36,7 +36,8 @@ public class SignUpRequest {
 
 	private boolean using2FA;
 
-	public SignUpRequest(String providerUserId,String num,Long cin, String email, String password, String matchingPassword) {
+
+	public SignUpRequest(String providerUserId,String num,Long cin, String email, String password, String matchingPassword ) {
 		this.providerUserId = providerUserId;
         this.num=num;
 		this.cin=cin;
@@ -67,6 +68,7 @@ public class SignUpRequest {
 		private String matchingPassword;
 
 		private SocialProvider socialProvider;
+
 
 		public Builder addProviderUserID(final String userID) {
 			this.providerUserID = userID;
@@ -108,6 +110,8 @@ public class SignUpRequest {
 			this.socialProvider = socialProvider;
 			return this;
 		}
+
+
 
 		public SignUpRequest build() {
 			return new SignUpRequest(providerUserID,num, cin,email, password, matchingPassword);

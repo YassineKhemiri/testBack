@@ -1,5 +1,8 @@
 package com.javachinna.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,6 +15,7 @@ import com.javachinna.dto.LocalUser;
 import com.javachinna.dto.SignUpRequest;
 import com.javachinna.exception.UserAlreadyExistAuthenticationException;
 import com.javachinna.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Chinna
@@ -44,4 +48,6 @@ public interface UserService {
 	String validateVerificationToken(String token);
 
 	boolean existbynum(String num);
+
+
 }

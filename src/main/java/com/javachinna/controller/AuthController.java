@@ -2,6 +2,8 @@ package com.javachinna.controller;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -98,10 +100,16 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-		if (!userService.existbynum(signUpRequest.getNum())) {
+		//User user1 =userService.findUserByNum(signUpRequest.getNum());
+		if (!userService.existbynum(signUpRequest.getNum()) ) {
 			return ResponseEntity
 					.badRequest()
 					.body(new ApiResponse(false, " num adherent non existant"));
+		}
+		if ( userService.findUserByNum(signUpRequest.getNum()).getVerified()!=0) {
+			return ResponseEntity
+					.badRequest()
+					.body(new ApiResponse(false, "utilisateur deja verifie"));
 		}
 		try {
 			User user = userService.registerNewUser(signUpRequest);
@@ -123,6 +131,12 @@ public class AuthController {
 			log.error("QR Generation Exception Ocurred", e);
 			return new ResponseEntity<>(new ApiResponse(false, "Unable to generate QR code!"), HttpStatus.BAD_REQUEST);
 		}
+		/*catch (Exception e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("error", "Failed to verify user , account already verified: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // Send JSON response
+		}*/
+
 		return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
 	}
 

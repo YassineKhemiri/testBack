@@ -2,6 +2,7 @@ package com.javachinna.controller;
 
 
 import com.javachinna.model.Contrat;
+import com.javachinna.model.CountType;
 import com.javachinna.model.User;
 import com.javachinna.service.ContratService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -31,6 +35,16 @@ public class ContratController {
     public ResponseEntity<?> getPercentageByBranche()
     {
         return  ResponseEntity.ok(contratService.getPercentageGroupByBranche());
+    }
+
+    @GetMapping("Count")
+    public Map<String,Long > countByVisitType() {
+        Map<String, Long> result = new HashMap<>();
+        List<CountType> counts = contratService.getPercentageGroupByBranche();
+        for (CountType row : counts) {
+            result.put( row.getBranche().getLibelleBranche(),row.getCount());
+        }
+        return result;
     }
 
 

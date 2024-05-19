@@ -59,11 +59,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
-
 		http.cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable().formLogin().disable().httpBasic().disable()
 				.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint()).and().authorizeRequests()
-				.antMatchers("/", "/error", "/api/all","/api/agencies/**","/api/reclamations/**", "/api/auth/**","/oauth2/**").permitAll().anyRequest().authenticated().and().oauth2Login().authorizationEndpoint()
+//				.antMatchers("/", "/error", "/api/all","/api/agencies/**","/api/reclamations/**", "/api/auth/**","/oauth2/**").permitAll().anyRequest().authenticated().and().oauth2Login().authorizationEndpoint()
+				.antMatchers("/","/error", "/api/all","/api/produits/getallProduits","/contrat/PercentageByBranche","/contrat/Count", "/api/produits/getproduit/**","/api/agencies/**", "/api/auth/**","/oauth2/**").permitAll().anyRequest().authenticated().and().oauth2Login().authorizationEndpoint()
 				.authorizationRequestRepository(cookieAuthorizationRequestRepository()).and().redirectionEndpoint().and().userInfoEndpoint().oidcUserService(customOidcUserService)
 				.userService(customOAuth2UserService).and().tokenEndpoint().accessTokenResponseClient(authorizationCodeTokenResponseClient()).and()
 				.successHandler(oAuth2AuthenticationSuccessHandler).failureHandler(oAuth2AuthenticationFailureHandler);

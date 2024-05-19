@@ -45,7 +45,6 @@ public class BrancheController {
     }
 
 
-
     @PutMapping("editbranche")
     public ResponseEntity<?> EditBranche(@RequestBody Branche b)
     {

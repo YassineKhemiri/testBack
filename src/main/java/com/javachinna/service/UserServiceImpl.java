@@ -1,6 +1,11 @@
 package com.javachinna.service;
 
+import java.io.IOException;
 import java.util.*;
+
+import java.util.Calendar;
+import java.util.List;
+
 
 import com.javachinna.dto.NewPasswordRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +29,10 @@ import com.javachinna.repo.RoleRepository;
 import com.javachinna.repo.UserRepository;
 import com.javachinna.repo.VerificationTokenRepository;
 import com.javachinna.security.oauth2.user.OAuth2UserInfo;
-import com.javachinna.security.oauth2.user.OAuth2UserInfoFactory;
 import com.javachinna.util.GeneralUtils;
 
 import dev.samstevens.totp.secret.SecretGenerator;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -69,6 +74,7 @@ public class UserServiceImpl implements UserService {
 				throw new UserAlreadyExistAuthenticationException("member with User num  : "+signUpRequest.getNum() + " not exist");
 			}*/
 
+
 		User user = buildUser(signUpRequest);
 		Date now = Calendar.getInstance().getTime();
 		user.setCreatedDate(now);
@@ -76,11 +82,16 @@ public class UserServiceImpl implements UserService {
 		user = userRepository.save(user);
 		userRepository.flush();
 		return user;
+
+
+
 	}
 	public boolean existbynum(String num) {
 		// Assuming you have a memberRepository
 		return userRepository.existsByNum(num);
 	}
+
+
 
 	private User buildUser(final SignUpRequest formDTO) {
 		User user = findUserByNum(formDTO.getNum());

@@ -77,7 +77,7 @@ public class MailServiceImpl implements MailService {
 
 	private void sendHtmlEmail(String subject, String msg, User user, String templateName) {
 		Map<String, Object> model = new HashMap<>();
-		model.put("name", user.getDisplayName());
+		//model.put("name", user.getDisplayName());
 		model.put("msg", msg);
 		model.put("title", subject);
 		model.put(BASE_URL, appProperties.getClient().getBaseUrl());

@@ -2,6 +2,7 @@ package com.javachinna.model;
 
 import java.io.Serializable;
 import java.util.Date;
+//import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -47,10 +48,13 @@ public class User implements Serializable {
 	private String sex;
 
 	@Lob
-	@Column(name = "image", columnDefinition = "BLOB")
+	@Column(name = "image_file", columnDefinition="LONGBLOB")
 	private byte[] image;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	/*@Temporal(TemporalType.TIMESTAMP)
+	private Date birth_date;*/
+
+	@Column(name = "dateNaissance")
 	private Date birth_date;
 
 	@Column(columnDefinition = "BIT", length = 1)
