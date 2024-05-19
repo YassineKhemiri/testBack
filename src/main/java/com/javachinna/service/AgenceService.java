@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AgenceService {
@@ -19,6 +20,10 @@ public class AgenceService {
         return repo.findDistinctGovernorates();
     }
 
-
-
+    public Optional<Agence> findNearest(double latitude, double longitude) {
+        return Optional.ofNullable(repo.findNearest(latitude, longitude));
+    }
+    public List<Agence> findByCite(String cite) {
+        return repo.findByCite(cite);
+    }
 }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.javachinna.model.User;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -19,5 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	boolean existsByNum(String num);
 	boolean existsByEmail(String email);
+
 
 }

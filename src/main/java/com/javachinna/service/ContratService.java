@@ -18,4 +18,7 @@ public interface ContratService {
     public void deleteContart(Long id);
 
     public List<CountType> getPercentageGroupByBranche();
+    public String createPaymentSession(Long contratId) throws Exception;
+   /*  public void handlePaymentSuccess(String sessionId);
+   public String createPaymentSession(Long contratId, Long userId, String signature) throws Exception;*/
 }

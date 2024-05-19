@@ -30,7 +30,8 @@ public class Contrat {
     @Column
     private String numContrat;
 
-
+@Column
+private Long prix;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date_effet;
 

@@ -36,9 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 public class OrderController {
 
-	private RazorpayClient client;
+	private final RazorpayClient client;
 
-	private RazorPayClientConfig razorPayClientConfig;
+	private final RazorPayClientConfig razorPayClientConfig;
 
 	@Autowired
 	private OrderService orderService;
@@ -58,7 +58,7 @@ public class OrderController {
 			String amountInPaise = convertRupeeToPaise(orderRequest.getAmount());
 			// Create an order in RazorPay and get the order id
 			Order order = createRazorPayOrder(amountInPaise);
-			razorPay = getOrderResponse((String) order.get("id"), amountInPaise);
+			razorPay = getOrderResponse(order.get("id"), amountInPaise);
 			// Save order in the database
 			orderService.saveOrder(razorPay.getRazorpayOrderId(), user.getUser().getId());
 		} catch (RazorpayException e) {

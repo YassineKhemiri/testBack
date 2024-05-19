@@ -83,5 +83,4 @@ public class User implements Serializable {
 	@Column(name = "verified")
 	private Byte verified =0; // Default is 0, indicating not verified. Use other values to indicate different states.
 
-
 }

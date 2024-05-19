@@ -7,6 +7,7 @@ import com.javachinna.service.ContratService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class ContratController {
 
 
     @GetMapping("/Mycontrat/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getContratByUserId(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(contratService.findContratByUserId(id));
     }
@@ -48,4 +50,13 @@ public class ContratController {
     @DeleteMapping("/{x}")
     public void deleteoffreReservationById(@PathVariable (name = "x") Long x) {
         contratService.deleteContart(x);}
+    @PostMapping("/pay/{contratId}")
+    public ResponseEntity<?> payForContrat(@PathVariable Long contratId) {
+        try {
+            String sessionId = contratService.createPaymentSession(contratId);
+            return ResponseEntity.ok(sessionId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Payment processing error: " + e.getMessage());
+        }
+    }
 }

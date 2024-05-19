@@ -1,8 +1,15 @@
 package com.javachinna.service;
 
+import com.javachinna.dto.LocalUser;
 import com.javachinna.model.Reclamation;
+import com.javachinna.model.ReclamationStatus;
+import com.javachinna.model.User;
 import com.javachinna.repo.Reclamationrepo;
+import com.javachinna.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +22,8 @@ public class ReclamationService {
 
     @Autowired
     private Reclamationrepo reclamationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public void saveReclamation(MultipartFile file, Reclamation reclamation) throws IOException {
@@ -22,10 +31,34 @@ public class ReclamationService {
             throw new IllegalArgumentException("File cannot be empty");
         }
 
-        reclamation.setFileData(file.getBytes()); // Set the file data
+        // Retrieve user from security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(username);
+
+        reclamation.setUser(user); // Set the user
+        reclamation.setFileData(file.getBytes());
+        reclamation.setFileType(file.getContentType());
         reclamationRepository.save(reclamation);
     }
     public List<Reclamation> getAllReclamations() {
         return reclamationRepository.findAll();
+    }
+    public Reclamation updateReclamationStatus(Long id, ReclamationStatus status) {
+        Reclamation reclamation = reclamationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reclamation not found with id: " + id));
+        reclamation.setStatus(status);
+        return reclamationRepository.save(reclamation);
+    }
+    public Reclamation getFileData(Long id) {
+        return reclamationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reclamation not found with id: " + id));
+    }
+    public List<Reclamation> getReclamationsByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LocalUser localUser = (LocalUser) authentication.getPrincipal(); // Casting to LocalUser
+        User user = localUser.getUser(); // Getting the User object from LocalUser
+        Long userId = user.getId(); // Getting the User ID
+        return reclamationRepository.findByUserId(userId);
     }
 }
