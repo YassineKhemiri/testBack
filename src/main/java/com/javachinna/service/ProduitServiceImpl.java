@@ -1,6 +1,8 @@
 package com.javachinna.service;
 
+import com.javachinna.model.Branche;
 import com.javachinna.model.Produit;
+import com.javachinna.repo.BrancheRepo;
 import com.javachinna.repo.ProduitRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,17 @@ public class ProduitServiceImpl implements ProduitService {
 
     @Autowired
     private ProduitRepo produitRepo;
+
+    @Autowired
+    private BrancheRepo brancheRepo;
+
+
     @Override
     public List<Produit> getAllProduits() {
         return produitRepo.findAll();
     }
 
-    @Override
+   /* @Override
     @Transactional
     public void addProduct(MultipartFile icon, MultipartFile image, Produit produit) throws IOException {
         if (image.isEmpty() || icon.isEmpty()) {
@@ -47,6 +54,43 @@ public class ProduitServiceImpl implements ProduitService {
         produit.setImage(image.getBytes());
         produitRepo.save(produit);
 
+    }*/
+
+    @Override
+    @Transactional
+    public void addProduct(MultipartFile icon, MultipartFile image, Produit produit, Long brancheId) throws IOException {
+        if (image.isEmpty() || icon.isEmpty()) {
+            throw new IllegalArgumentException("Icon and image cannot be empty");
+        }
+        byte[] iconBytes = icon.getBytes();
+        byte[] imageBytes = image.getBytes();
+        produit.setImage(imageBytes);
+        produit.setIcon(iconBytes);
+
+        // Find the branche by id and set it to produit
+        Branche branche = brancheRepo.findById(brancheId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid branche ID"));
+        produit.setBranche(branche);
+
+        produitRepo.save(produit);
+    }
+
+    @Override
+    @Transactional
+    public void EditProduct(MultipartFile icon, MultipartFile image, Produit produit, Long brancheId) throws IOException {
+        if (image.isEmpty() || icon.isEmpty()) {
+            throw new IllegalArgumentException("Icon and image cannot be empty");
+        }
+        byte[] iconBytes = icon.getBytes();
+        produit.setIcon(iconBytes);
+        produit.setImage(image.getBytes());
+
+        // Find the branche by id and set it to produit
+        Branche branche = brancheRepo.findById(brancheId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid branche ID"));
+        produit.setBranche(branche);
+
+        produitRepo.save(produit);
     }
 
     @Override

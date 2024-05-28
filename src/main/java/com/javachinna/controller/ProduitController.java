@@ -22,9 +22,9 @@ public class ProduitController {
     private ProduitService produitService;
 
     @PostMapping("/addProduit")
-    public ResponseEntity<?> addProduit(@RequestParam("fileIcon") MultipartFile fileIcon,@RequestParam("file") MultipartFile file, @Valid Produit produit) {
+    public ResponseEntity<?> addProduit(@RequestParam("fileIcon") MultipartFile fileIcon,@RequestParam("file") MultipartFile file,@RequestParam("brancheId") Long brancheId, @Valid Produit produit) {
         try {
-            produitService.addProduct(fileIcon,file,produit);
+            produitService.addProduct(fileIcon,file,produit, brancheId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "icon and image uploaded and form data saved successfully");
             return ResponseEntity.ok(response);  // Send JSON response
@@ -37,9 +37,9 @@ public class ProduitController {
 
 
     @PutMapping("/editProduit")
-    public ResponseEntity<?> EditProduit(@RequestParam("fileIcon") MultipartFile fileIcon,@RequestParam("file") MultipartFile file, @Valid Produit produit) {
+    public ResponseEntity<?> EditProduit(@RequestParam("fileIcon") MultipartFile fileIcon,@RequestParam("file") MultipartFile file,@RequestParam("brancheId") Long brancheId, @Valid Produit produit) {
         try {
-            produitService.EditProduct(fileIcon,file,produit);
+            produitService.EditProduct(fileIcon,file,produit, brancheId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "icon and image uploaded and form data saved successfully");
             return ResponseEntity.ok(response);  // Send JSON response

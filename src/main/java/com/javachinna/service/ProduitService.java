@@ -10,10 +10,15 @@ public interface ProduitService {
 
     List<Produit> getAllProduits ();
 
-   void addProduct (MultipartFile icon ,MultipartFile image , Produit produit)  throws IOException;
+  /* void addProduct (MultipartFile icon ,MultipartFile image , Produit produit )  throws IOException;
 
 
-    void EditProduct (MultipartFile icon , MultipartFile image , Produit produit) throws IOException;
+    void EditProduct (MultipartFile icon , MultipartFile image , Produit produit) throws IOException;*/
+
+    void addProduct (MultipartFile icon ,MultipartFile image , Produit produit ,Long brancheId)  throws IOException;
+
+
+    void EditProduct (MultipartFile icon , MultipartFile image , Produit produit,Long brancheId) throws IOException;
 
 
     void deleteProduct (Long Idproduit);

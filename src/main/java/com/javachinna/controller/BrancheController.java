@@ -14,8 +14,7 @@ public class BrancheController {
 
     @Autowired
     private BrancheService brancheService;
-
-
+    
     @GetMapping("branches")
     public ResponseEntity<?> getAllBranches()
     {

@@ -75,14 +75,23 @@ public class AuthController {
 				new UsernamePasswordAuthenticationToken(loginRequest.getNum(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		LocalUser localUser = (LocalUser) authentication.getPrincipal();
+		boolean authenticated = !localUser.getUser().isUsing2FA();
 
 		// Ensure the user is enabled and has verified their email
 		if (!localUser.isEnabled() || localUser.getUser().getVerified() != 2) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse(false, "Account not enabled or email not verified."));
 		}
 
-		String jwt = tokenProvider.createToken(localUser, true);
+		String jwt = tokenProvider.createToken(localUser, authenticated);
+/*
 		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, true, GeneralUtils.buildUserInfo(localUser)));
+
+*/
+
+
+		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, authenticated, GeneralUtils.buildUserInfo(localUser)));
+
+
 	}
 
 

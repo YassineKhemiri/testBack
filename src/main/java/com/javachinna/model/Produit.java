@@ -18,6 +18,9 @@ public class Produit {
     @Lob
     private String contenu;
     private String titre;
+    @ManyToOne
+    @JoinColumn(name = "BRANCHE_ID", nullable = false)
+    private Branche branche;
     @Lob
     @Column(name = "icon_file", columnDefinition="LONGBLOB")
     private byte[] icon;

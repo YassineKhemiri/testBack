@@ -73,7 +73,7 @@ public class UserController {
 	}
 
 
-	@PutMapping("/changePwd")
+	/*@PutMapping("/changePwd")
 	public ResponseEntity<?> changePassword(@RequestParam("pwd") String pwd,@CurrentUser LocalUser user)
 	{
 		try {
@@ -89,7 +89,29 @@ public class UserController {
 			response.put("error", "Failed to change pwd: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // Send JSON response
 		}
+	}*/
+
+	@PutMapping("/changePwd")
+	public ResponseEntity<?> changePassword(@RequestParam("oldPwd") String oldPwd, @RequestParam("newPwd") String newPwd, @CurrentUser LocalUser user) {
+		try {
+			User user1 = userService.getUserById(user.getUser().getId());
+			if (!passwordEncoder.matches(oldPwd, user1.getPassword())) {
+				Map<String, Object> response = new HashMap<>();
+				response.put("error", "Current password is incorrect");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // Send JSON response
+			}
+			user1.setPassword(passwordEncoder.encode(newPwd));
+			userRepository.save(user1);
+			Map<String, Object> response = new HashMap<>();
+			response.put("message", "Password changed successfully");
+			return ResponseEntity.ok(response);  // Send JSON response
+		} catch (Exception e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("error", "Failed to change password: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // Send JSON response
+		}
 	}
+
 
 	@PutMapping("/changeData")
 	public ResponseEntity<?> changeData(@RequestParam("name") String name, @RequestParam("email") String email, @RequestParam("address") String address, @RequestParam("sex") String sex, @RequestParam("date") @DateTimeFormat (pattern = "yyyy-MM-dd") Date date, @CurrentUser LocalUser user)
