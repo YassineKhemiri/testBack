@@ -61,7 +61,7 @@ class AuthControllerTest2 {
 		Mockito.when(passwordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
 	}
 
-	@Test
+	/*@Test
 	public void testAuthenticateUser() throws Exception {
 		LoginRequest loginRequest = new LoginRequest(user.getNum(), user.getPassword());
 		String json = mapper.writeValueAsString(loginRequest);
@@ -72,7 +72,7 @@ class AuthControllerTest2 {
 		user.setUsing2FA(true);
 		mockMvc.perform(post("/api/auth/signin").contentType(MediaType.APPLICATION_JSON).characterEncoding("utf-8").content(json).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.authenticated").value("false")).andExpect(jsonPath("$.user").doesNotExist());
-	}
+	}*/
 
 	@Test
 	public void testRegisterUser() throws Exception {

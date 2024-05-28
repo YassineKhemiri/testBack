@@ -43,7 +43,8 @@ private Long prix;
 
     @Column(columnDefinition = "BIT", length = 1)
     private boolean paye=false;
-
+    @Column(columnDefinition = "BIT", length = 1)
+    private boolean renewed = false;
     // bi-directional many-to-many association to Role
     @JsonIgnore
     @ManyToMany

@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import com.javachinna.dto.*;
+import com.javachinna.service.RecaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,9 +63,14 @@ public class AuthController {
 
 	@Autowired
 	MailService mailService;
+	@Autowired
+	RecaptchaService recaptchaService;
 
 	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		if (!recaptchaService.verifyRecaptcha(loginRequest.getRecaptchaResponse())) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse(false, "ReCAPTCHA validation failed."));
+		}
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getNum(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -140,12 +146,12 @@ public class AuthController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
 	}
 
-    @PostMapping("/changePassword")
-    public ResponseEntity<?> ChangePassword(@Valid @RequestBody NewPasswordRequest newPasswordRequest) {
+	@PostMapping("/changePassword")
+	public ResponseEntity<?> ChangePassword(@Valid @RequestBody NewPasswordRequest newPasswordRequest) {
 
-        User user = userService.ChangePassword(newPasswordRequest);
-        return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
-    }
+		User user = userService.ChangePassword(newPasswordRequest);
+		return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
+	}
 
 	@PostMapping("/verify")
 	@PreAuthorize("hasRole('PRE_VERIFICATION_USER')")
